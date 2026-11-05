@@ -1,18 +1,33 @@
-import { afterAll, beforeAll, describe, expect, test } from "bun:test";
+import { afterAll, beforeAll, describe, expect, test } from "./testing.ts";
+import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createServer, type RequestListener, type Server } from "node:http";
+import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { promisify } from "node:util";
 import { path7za } from "7zip-bin";
-import { ensureModel, modelsDir, modelsUrl, MODEL_SOURCES, type ModelSource } from "./models";
-import { MODELS } from "./test-models";
+import { ensureModel, modelsDir, modelsUrl, MODEL_SOURCES, type ModelSource } from "./models.ts";
+import { MODELS } from "./test-models.ts";
 
 const work = join(tmpdir(), `chat-moderation-models-test-${process.pid}`);
 const name = "tiny-model-q8";
-let server: ReturnType<typeof Bun.serve>;
-let serve: () => ReturnType<typeof Bun.serve>;
+let server: Server;
+let serve: () => Promise<Server>;
 let source: ModelSource;
 let baseUrl: string;
+
+const listen = (handler: RequestListener, port: number) =>
+  new Promise<Server>((resolve) => {
+    const s = createServer(handler);
+    s.listen(port, "127.0.0.1", () => resolve(s));
+  });
+const stop = (s: Server) =>
+  new Promise<void>((resolve) => {
+    s.closeAllConnections();
+    s.close(() => resolve());
+  });
 
 beforeAll(async () => {
   // A small stand-in folder: real tokenizer and config files, a fake model.onnx.
@@ -22,19 +37,26 @@ beforeAll(async () => {
   for (const f of ["config.json", "tokenizer.json", "tokenizer_config.json"]) cpSync(join(real, f), join(src, f));
   writeFileSync(join(src, "model.onnx"), "not really onnx");
   const archive = join(work, `${name}.7z`);
-  const proc = Bun.spawn([path7za, "a", "-t7z", "-bso0", "-bsp0", archive, name], { cwd: join(work, "src") });
-  expect(await proc.exited).toBe(0);
+  await promisify(execFile)(path7za, ["a", "-t7z", "-bso0", "-bsp0", archive, name], { cwd: join(work, "src") });
   const bytes = readFileSync(archive);
   source = { archive: `${name}.7z`, bytes: bytes.length, sha256: createHash("sha256").update(bytes).digest("hex") };
-  const handler = (req: Request) => (new URL(req.url).pathname === `/${name}.7z` ? new Response(bytes) : new Response("nope", { status: 404 }));
-  server = Bun.serve({ port: 0, fetch: handler });
-  const port = server.port;
-  serve = () => Bun.serve({ port, fetch: handler });
-  baseUrl = `http://localhost:${port}/`;
+  const handler: RequestListener = (req, res) => {
+    if (req.url === `/${name}.7z`) {
+      res.writeHead(200, { "content-type": "application/octet-stream", "content-length": bytes.length });
+      res.end(bytes);
+    } else {
+      res.writeHead(404);
+      res.end("nope");
+    }
+  };
+  server = await listen(handler, 0);
+  const port = (server.address() as AddressInfo).port;
+  serve = () => listen(handler, port);
+  baseUrl = `http://127.0.0.1:${port}/`;
 });
 
-afterAll(() => {
-  server?.stop(true);
+afterAll(async () => {
+  if (server) await stop(server);
   rmSync(work, { recursive: true, force: true });
 });
 
@@ -66,11 +88,11 @@ describe("ensureModel", () => {
     expect(got).toBe(join(dir, name));
     for (const f of ["model.onnx", "config.json", "tokenizer.json", "tokenizer_config.json"]) expect(existsSync(join(got, f))).toBe(true);
     expect(existsSync(join(dir, ".tmp", source.archive))).toBe(false);
-    server.stop(true);
+    await stop(server);
     try {
       expect(await ensureModel(name, { modelsDir: dir, modelsUrl: baseUrl, sources: { [name]: source } })).toBe(got);
     } finally {
-      server = serve();
+      server = await serve();
     }
   }, 30_000);
 

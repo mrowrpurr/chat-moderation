@@ -24,12 +24,14 @@
     "src",
     "!src/*.test.ts",
     "!src/test-models.ts",
+    "!src/testing.ts",
     "README.md",
     "LICENSE",
     "LICENSE-0BSD"
   ],
   "scripts": {
     "test": "bun test",
+    "test:node": "node --test --test-concurrency=1 src/*.test.ts",
     "typecheck": "tsc --noEmit",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "prepublishOnly": "bun run typecheck && bun run build"

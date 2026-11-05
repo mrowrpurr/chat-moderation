@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
-import { describe, expect, test } from "bun:test";
-import { EMOTION_LABELS, EmotionClassifier } from "./index";
-import { MODELS } from "./test-models";
+import { describe, expect, test } from "./testing.ts";
+import { EMOTION_LABELS, EmotionClassifier } from "./index.ts";
+import { MODELS } from "./test-models.ts";
 
 describe("EmotionClassifier", () => {
   test("is lazy, unloads, reloads", async () => {

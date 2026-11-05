@@ -1,5 +1,5 @@
-import { describe, expect, test } from "bun:test";
-import { allcaps } from "./allcaps";
+import { describe, expect, test } from "./testing.ts";
+import { allcaps } from "./allcaps.ts";
 
 describe("allcaps", () => {
   test("all uppercase is 1", () => {

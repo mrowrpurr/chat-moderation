@@ -1,6 +1,6 @@
-import { describe, expect, test } from "bun:test";
-import { EMOTION_LABELS, MODERATION_LABELS, Moderator } from "./index";
-import { MODELS } from "./test-models";
+import { describe, expect, test } from "./testing.ts";
+import { EMOTION_LABELS, MODERATION_LABELS, Moderator } from "./index.ts";
+import { MODELS } from "./test-models.ts";
 
 describe("Moderator", () => {
   test("toxicityDir and emotionsDir reach the right classifier", () => {

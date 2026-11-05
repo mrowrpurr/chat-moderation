@@ -1,9 +1,9 @@
 import { cpSync, existsSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname } from "node:path";
-import { describe, expect, test } from "bun:test";
-import { MODERATION_LABELS, ToxicityClassifier } from "./index";
-import { MODELS } from "./test-models";
+import { describe, expect, test } from "./testing.ts";
+import { MODERATION_LABELS, ToxicityClassifier } from "./index.ts";
+import { MODELS } from "./test-models.ts";
 
 describe("ToxicityClassifier", () => {
   test("is lazy: nothing loaded until the first score, explicit unload frees it, reload works", async () => {

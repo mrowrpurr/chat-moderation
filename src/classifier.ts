@@ -57,13 +57,14 @@ export abstract class TextClassifier<Label extends string> {
   private loaded: Loaded | null = null;
   private loading: Promise<Loaded> | null = null;
 
-  protected constructor(
-    /** Model name; the folder under `models/` is `<modelName>-<precision>`. */
-    readonly modelName: string,
-    /** Every label the model reports, in its output order. */
-    readonly labels: readonly Label[],
-    options: ClassifierOptions = {},
-  ) {
+  /** Model name; the folder under `models/` is `<modelName>-<precision>`. */
+  readonly modelName: string;
+  /** Every label the model reports, in its output order. */
+  readonly labels: readonly Label[];
+
+  protected constructor(modelName: string, labels: readonly Label[], options: ClassifierOptions = {}) {
+    this.modelName = modelName;
+    this.labels = labels;
     this.precision = options.precision ?? "fp32";
     this.ownDir = options.modelDir ? resolve(options.modelDir) + "/" : null;
     this.baseDir = options.modelsDir ? resolve(options.modelsDir) : modelsDir();

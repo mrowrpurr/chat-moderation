@@ -13,7 +13,7 @@ allcaps;
 await moderator.unload();
 ```
 
-Tests: `bun test`. To try a message by hand, `echo 'some message' | bun cli.ts` prints every score, highest first (`--q8` for the quantized models); `cli.ts` is a dev tool, not part of the package.
+Tests: `bun test` on Bun, `node --test --test-concurrency=1 src/*.test.ts` on Node (22 or newer); the same files run on both. To try a message by hand, `echo 'some message' | bun cli.ts` prints every score, highest first (`--q8` for the quantized models); `cli.ts` is a dev tool, not part of the package.
 
 ## API
 

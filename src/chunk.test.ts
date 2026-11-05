@@ -1,5 +1,5 @@
-import { describe, expect, test } from "bun:test";
-import { chunkByTokens, splitSentences, type Tokenizer } from "./chunk";
+import { describe, expect, test } from "./testing.ts";
+import { chunkByTokens, splitSentences, type Tokenizer } from "./chunk.ts";
 
 // One token per whitespace-separated word; decode joins them back.
 const words: Tokenizer = {
