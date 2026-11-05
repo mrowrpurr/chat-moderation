@@ -96,4 +96,4 @@ async function nodeTesting(): Promise<Testing> {
   };
 }
 
-export const { describe, test, beforeAll, afterAll, expect }: Testing = await (typeof Bun === "undefined" ? nodeTesting() : bunTesting());
+export const { describe, test, beforeAll, afterAll, expect }: Testing = await (process.versions.bun === undefined ? nodeTesting() : bunTesting());
