@@ -1,20 +1,6 @@
-# chat-moderation
-
-Stop yelling at ephemeral token generation algorithms.
+# Chat Moderation
 
 Toxicity and emotion scoring for Bun, local and CPU-only: Detoxify `unbiased` and GoEmotions, as ONNX, plus an `allcaps` ratio. Weights are in the repo.
-
-Published as `@tools/chat-moderation` to the Gitea npm registry of the Tools org (code and the model
-weights, about 1.2 GB). Consumers map the `@tools` scope to `https://git.mrowr.dev/api/packages/Tools/npm/`
-(with a token; the instance requires sign-in) in `bunfig.toml` and run:
-
-```bash
-bun add @tools/chat-moderation
-```
-
-To publish a new version from this checkout: bump `version`, then `npm publish` with a Gitea token
-that has `package:write` (`publishConfig` already names the registry). For hacking on it here:
-`bun install`, `bun test`.
 
 ```ts
 import { Moderator } from "@tools/chat-moderation";
@@ -145,3 +131,9 @@ The hub's `unitary/unbiased-toxic-roberta` (and the `onnx-community` conversion 
 | `neutral`        | none of the 27 emotions; the paper keeps it outside the emotion set                                                     |
 
 Loaded, fp32 takes about 920 MB of process memory and q8 about 270 MB. q8 scores differ from fp32 by up to about 0.14, enough to move a label across a 0.5 threshold.
+
+# License
+
+This software is available under either the [MIT License](LICENSE)
+or the [BSD Zero Clause License (0BSD)](LICENSE-0BSD),
+at your option.
