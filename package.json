@@ -1,0 +1,31 @@
+{
+  "name": "@tools/chat-moderation",
+  "version": "0.1.0",
+  "description": "Local toxicity and emotion scoring with Detoxify unbiased and GoEmotions (ONNX) for Bun \ud83c\udf5e",
+  "type": "module",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "4.3.2",
+    "7zip-bin": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.4",
+    "typescript": "^7.0.2"
+  },
+  "files": [
+    "src",
+    "!src/*.test.ts",
+    "README.md"
+  ],
+  "publishConfig": {
+    "registry": "https://git.mrowr.dev/api/packages/Tools/npm/",
+    "access": "public"
+  }
+}

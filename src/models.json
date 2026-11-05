@@ -1,0 +1,25 @@
+{
+  "baseUrl": "https://github.com/mrowrpurr/chat-moderation/releases/download/models/",
+  "models": {
+    "roberta-base-go_emotions-fp32": {
+      "archive": "roberta-base-go_emotions-fp32.7z",
+      "bytes": 430348816,
+      "sha256": "25a9076687a15036f87e2486f628389180376b19094202b88487e0fb91983718"
+    },
+    "roberta-base-go_emotions-q8": {
+      "archive": "roberta-base-go_emotions-q8.7z",
+      "bytes": 96514025,
+      "sha256": "1e4d0f3954a38423d6b62e1caafa3e72f9422c7a74a17bc3db3564b6117107da"
+    },
+    "unbiased-toxic-roberta-detoxify-fp32": {
+      "archive": "unbiased-toxic-roberta-detoxify-fp32.7z",
+      "bytes": 465649527,
+      "sha256": "10e5bad08b5d5b94b4d3d9fee5c530d024026b10df84c8e5d8bb37cc3efb8c5f"
+    },
+    "unbiased-toxic-roberta-detoxify-q8": {
+      "archive": "unbiased-toxic-roberta-detoxify-q8.7z",
+      "bytes": 56165511,
+      "sha256": "96fab844386e9dc79abc576e62f14cee931288bd3fc3c7e71ce9aabf4935fa30"
+    }
+  }
+}
