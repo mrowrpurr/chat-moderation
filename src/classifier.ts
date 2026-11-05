@@ -3,8 +3,8 @@
 import { existsSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { env, pipeline, type TextClassificationPipeline } from "@huggingface/transformers";
-import { chunkByTokens, type Tokenizer } from "./chunk";
-import { ensureModel, modelsDir } from "./models";
+import { chunkByTokens, type Tokenizer } from "./chunk.ts";
+import { ensureModel, modelsDir } from "./models.ts";
 
 /**
  * Which ONNX weights to run. `fp32` is the exact export of the checkpoint.

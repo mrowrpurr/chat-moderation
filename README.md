@@ -1,6 +1,6 @@
 # Chat Moderation
 
-Toxicity and emotion scoring for Bun, local and CPU-only: Detoxify `unbiased` and GoEmotions, as ONNX, plus an `allcaps` ratio. Weights are in the repo.
+Toxicity and emotion scoring for Bun and Node, local and CPU-only: Detoxify `unbiased` and GoEmotions, as ONNX, plus an `allcaps` ratio. Weights are in the repo.
 
 ```ts
 import { Moderator } from "chat-moderation";

@@ -1,8 +1,8 @@
 // The moderator: toxicity and emotions on every text, in one call. 🍞
-import { allcaps } from "./allcaps";
-import { EmotionClassifier, type EmotionScores } from "./emotions";
-import { ToxicityClassifier, type ModerationScores } from "./toxicity";
-import type { ClassifierOptions } from "./classifier";
+import { allcaps } from "./allcaps.ts";
+import { EmotionClassifier, type EmotionScores } from "./emotions.ts";
+import { ToxicityClassifier, type ModerationScores } from "./toxicity.ts";
+import type { ClassifierOptions } from "./classifier.ts";
 
 export type Scores = {
   moderation: ModerationScores;

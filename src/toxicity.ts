@@ -1,5 +1,5 @@
 // Detoxify `unbiased` toxicity scoring. 🍞
-import { TextClassifier, type ClassifierOptions } from "./classifier";
+import { TextClassifier, type ClassifierOptions } from "./classifier.ts";
 
 /** The seven Detoxify labels, in the order Detoxify reports them. */
 export const MODERATION_LABELS = [

@@ -1,10 +1,15 @@
 // Where models live on disk, and fetching one that is not there yet. 🍞
+import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync } from "node:fs";
+import { createReadStream, createWriteStream, existsSync } from "node:fs";
 import { chmod, mkdir, rename, rm, stat } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
-import sources from "./models.json";
+import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
+import { setTimeout as sleep } from "node:timers/promises";
+import { promisify } from "node:util";
+import sources from "./models.json" with { type: "json" };
 
 export type ModelSource = { archive: string; bytes: number; sha256: string };
 
@@ -78,13 +83,13 @@ export async function ensureModel(name: string, options: EnsureOptions = {}): Pr
 async function download(url: string, to: string): Promise<void> {
   const res = await fetch(url);
   if (!res.ok || !res.body) throw new Error(`Download failed: ${res.status} ${res.statusText} for ${url}`);
-  await Bun.write(to, res);
+  await pipeline(Readable.fromWeb(res.body as import("node:stream/web").ReadableStream), createWriteStream(to));
 }
 
 async function verify(archive: string, source: ModelSource): Promise<void> {
   const size = (await stat(archive)).size;
   const hash = createHash("sha256");
-  for await (const chunk of Bun.file(archive).stream()) hash.update(chunk);
+  for await (const chunk of createReadStream(archive)) hash.update(chunk);
   const sha256 = hash.digest("hex");
   if (size !== source.bytes || sha256 !== source.sha256) {
     await rm(archive, { force: true });
@@ -97,9 +102,11 @@ async function verify(archive: string, source: ModelSource): Promise<void> {
 async function extract(archive: string, into: string): Promise<void> {
   const { path7za } = await import("7zip-bin");
   await chmod(path7za, 0o755).catch(() => {}); // package installs drop the executable bit
-  const proc = Bun.spawn([path7za, "x", "-y", `-o${into}`, "-bso0", "-bsp0", archive], { stderr: "pipe" });
-  if ((await proc.exited) !== 0) {
-    throw new Error(`7z failed on ${archive}: ${await new Response(proc.stderr).text()}`);
+  try {
+    await promisify(execFile)(path7za, ["x", "-y", `-o${into}`, "-bso0", "-bsp0", archive]);
+  } catch (error) {
+    const stderr = (error as { stderr?: string }).stderr ?? "";
+    throw new Error(`7z failed on ${archive}: ${stderr || String(error)}`);
   }
 }
 
@@ -112,7 +119,7 @@ async function withLock(lockDir: string, fn: () => Promise<void>): Promise<void>
       break;
     } catch {
       if (Date.now() - started > 30 * 60_000) throw new Error(`Timed out waiting for ${lockDir}; remove it if no download is running.`);
-      await Bun.sleep(500);
+      await sleep(500);
     }
   }
   try {

@@ -1,5 +1,5 @@
 // GoEmotions emotion scoring with SamLowe's roberta-base-go_emotions. 🍞
-import { TextClassifier, type ClassifierOptions } from "./classifier";
+import { TextClassifier, type ClassifierOptions } from "./classifier.ts";
 
 /** The 28 GoEmotions labels, in the model's output order. */
 export const EMOTION_LABELS = [
