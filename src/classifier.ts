@@ -1,4 +1,4 @@
-// One ONNX text classifier run locally in Bun via Transformers.js: lazy load,
+// One ONNX text classifier run locally in Bun or Node via Transformers.js: lazy load,
 // explicit unload, long text chunked and scored as the max per label. 🍞
 import { existsSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
