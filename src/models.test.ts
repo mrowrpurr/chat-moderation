@@ -4,7 +4,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } fr
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { path7za } from "7zip-bin";
-import { ensureModel, modelsDir, modelsUrl, type ModelSource } from "./models";
+import { ensureModel, modelsDir, modelsUrl, MODEL_SOURCES, type ModelSource } from "./models";
 import { MODELS } from "./test-models";
 
 const work = join(tmpdir(), `chat-moderation-models-test-${process.pid}`);
@@ -48,7 +48,14 @@ describe("modelsDir", () => {
 describe("modelsUrl", () => {
   test("the option, else models.json; neither set is an error", () => {
     expect(modelsUrl("https://x/y")).toBe("https://x/y/");
-    expect(() => modelsUrl()).toThrow("No models URL");
+    expect(modelsUrl()).toBe(MODEL_SOURCES.baseUrl);
+    const saved = MODEL_SOURCES.baseUrl;
+    MODEL_SOURCES.baseUrl = "";
+    try {
+      expect(() => modelsUrl()).toThrow("No models URL");
+    } finally {
+      MODEL_SOURCES.baseUrl = saved;
+    }
   });
 });
 
