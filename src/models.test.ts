@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, test } from "./testing.ts";
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createServer, type RequestListener, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
@@ -37,6 +37,7 @@ beforeAll(async () => {
   for (const f of ["config.json", "tokenizer.json", "tokenizer_config.json"]) cpSync(join(real, f), join(src, f));
   writeFileSync(join(src, "model.onnx"), "not really onnx");
   const archive = join(work, `${name}.7z`);
+  chmodSync(path7za, 0o755); // package installs drop the executable bit; the library does the same before extracting
   await promisify(execFile)(path7za, ["a", "-t7z", "-bso0", "-bsp0", archive, name], { cwd: join(work, "src") });
   const bytes = readFileSync(archive);
   source = { archive: `${name}.7z`, bytes: bytes.length, sha256: createHash("sha256").update(bytes).digest("hex") };
