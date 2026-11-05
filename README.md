@@ -3,7 +3,7 @@
 Toxicity and emotion scoring for Bun, local and CPU-only: Detoxify `unbiased` and GoEmotions, as ONNX, plus an `allcaps` ratio. Weights are in the repo.
 
 ```ts
-import { Moderator } from "@tools/chat-moderation";
+import { Moderator } from "chat-moderation";
 
 const moderator = new Moderator();
 const { moderation, emotions, allcaps } = await moderator.score("some message");

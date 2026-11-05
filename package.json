@@ -1,15 +1,36 @@
 {
-  "name": "@tools/chat-moderation",
+  "name": "chat-moderation",
   "version": "0.1.0",
-  "description": "Local toxicity and emotion scoring with Detoxify unbiased and GoEmotions (ONNX) for Bun \ud83c\udf5e",
+  "description": "Local toxicity and emotion scoring with Detoxify unbiased and GoEmotions (ONNX) for Bun 🍞",
   "type": "module",
+  "license": "MIT OR 0BSD",
+  "author": "Mrowr Purr <mrowr.purr@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrowrpurr/chat-moderation.git"
+  },
+  "homepage": "https://github.com/mrowrpurr/chat-moderation#readme",
   "module": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
+  "files": [
+    "src",
+    "!src/*.test.ts",
+    "!src/test-models.ts",
+    "README.md",
+    "LICENSE",
+    "LICENSE-0BSD"
+  ],
   "scripts": {
-    "test": "bun test"
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun run typecheck"
+  },
+  "keywords": ["bun", "moderation", "toxicity", "emotion", "detoxify", "goemotions", "onnx", "transformers", "chat", "nlp"],
+  "engines": {
+    "bun": ">=1.3.0"
   },
   "dependencies": {
     "@huggingface/transformers": "4.3.2",
@@ -18,14 +39,5 @@
   "devDependencies": {
     "@types/bun": "^1.4.4",
     "typescript": "^7.0.2"
-  },
-  "files": [
-    "src",
-    "!src/*.test.ts",
-    "README.md"
-  ],
-  "publishConfig": {
-    "registry": "https://git.mrowr.dev/api/packages/Tools/npm/",
-    "access": "public"
   }
 }
