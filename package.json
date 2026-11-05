@@ -1,6 +1,6 @@
 {
   "name": "chat-moderation",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local toxicity and emotion scoring with Detoxify unbiased and GoEmotions (ONNX) 🍞",
   "type": "module",
   "license": "MIT OR 0BSD",
